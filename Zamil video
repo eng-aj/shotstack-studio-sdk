@@ -1,0 +1,460 @@
+# Zamil AC Saudi National Day Video Generator
+
+I'll create a self-contained HTML page that simulates a video generator based on your storyboard. This will include a preview of the video frames and a mock generation button.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zamil AC - Saudi National Day Video Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0d7114 0%, #1c3c1d 100%);
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+            color: #00a896;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .generator-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .storyboard-preview {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .preview-title {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .frames-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .frame {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            transition: transform 0.3s ease;
+        }
+        
+        .frame:hover {
+            transform: translateY(-5px);
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .frame-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #00d4b4;
+        }
+        
+        .frame-content {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .frame-visual {
+            width: 120px;
+            height: 80px;
+            background: linear-gradient(45deg, #0a5c14, #1e7920);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        
+        .frame-text {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+        
+        .controls {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .control-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .control-title {
+            margin-bottom: 20px;
+            color: #00d4b4;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(45deg, #00a896, #00d4b4);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 20px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 212, 180, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-generate {
+            background: linear-gradient(45deg, #d4ac0d, #f1c40f);
+            color: #1e3c1d;
+            font-size: 1.3rem;
+            padding: 20px;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .progress {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(45deg, #00a896, #00d4b4);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+        
+        .status {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            min-height: 24px;
+        }
+        
+        .success-message {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 212, 180, 0.2);
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .generator-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-wind logo-icon"></i>
+                <h1>Zamil AC Video Generator</h1>
+            </div>
+            <p class="subtitle">Create a stunning promotional video for Saudi National Day</p>
+        </header>
+        
+        <div class="generator-container">
+            <div class="storyboard-preview">
+                <h2 class="preview-title">Video Storyboard Preview</h2>
+                <div class="frames-container">
+                    <div class="frame">
+                        <div class="frame-header">
+                            <h3>Frame 1 - Opening</h3>
+                            <span>5s</span>
+                        </div>
+                        <div class="frame-content">
+                            <div class="frame-visual">
+                                <i class="fas fa-flag"></i>
+                            </div>
+                            <div class="frame-text">
+                                <p>Saudi flag waving with text: "Saudi National Day 95 – A Legacy of Pride"</p>
+                                <p>Soft oud & drum music intro</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="frame">
+                        <div class="frame-header">
+                            <h3>Frame 2 - Teamwork</h3>
+                            <span>8s</span>
+                        </div>
+                        <div class="frame-content">
+                            <div class="frame-visual">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="frame-text">
+                                <p>Engineers sketching, technicians assembling AC units, workers smiling</p>
+                                <p>Text: "Building comfort for our Kingdom"</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="frame">
+                        <div class="frame-header">
+                            <h3>Frame 3 - Impact</h3>
+                            <span>10s</span>
+                        </div>
+                        <div class="frame-content">
+                            <div class="frame-visual">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <div class="frame-text">
+                                <p>Saudi family enjoying cool home, worker outside with AC unit</p>
+                                <p>Text: "Innovation that serves every home, every city, every dream"</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="frame">
+                        <div class="frame-header">
+                            <h3>Frame 4 - Cultural Pride</h3>
+                            <span>7s</span>
+                        </div>
+                        <div class="frame-content">
+                            <div class="frame-visual">
+                                <i class="fas fa-hand-holding-heart"></i>
+                            </div>
+                            <div class="frame-text">
+                                <p>Arabic calligraphy transforming into Saudi flag with Zamil logo</p>
+                                <p>Text: "Proudly serving our nation for generations"</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="frame">
+                        <div class="frame-header">
+                            <h3>Frame 5 - Closing</h3>
+                            <span>6s</span>
+                        </div>
+                        <div class="frame-content">
+                            <div class="frame-visual">
+                                <i class="fas fa-city"></i>
+                            </div>
+                            <div class="frame-text">
+                                <p>Aerial shot of Saudi skyline with employees waving flags</p>
+                                <p>Final text and logos with crescendo music</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <div class="control-card">
+                    <h2 class="control-title"><i class="fas fa-cogs"></i> Video Options</h2>
+                    <div class="options">
+                        <div class="option">
+                            <input type="checkbox" id="watermark" checked>
+                            <label for="watermark">Add Zamil AC Watermark</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="logo" checked>
+                            <label for="logo">Include National Day Logo</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="music" checked>
+                            <label for="music">Add Background Music</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" id="subtitles" checked>
+                            <label for="subtitles">Include Arabic Subtitles</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="control-card">
+                    <h2 class="control-title"><i class="fas fa-magic"></i> Generate Video</h2>
+                    <p>Click the button below to generate your video based on the storyboard.</p>
+                    
+                    <button class="btn btn-generate" id="generate-btn">
+                        <i class="fas fa-play-circle"></i> Generate Video
+                    </button>
+                    
+                    <div class="progress">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                    
+                    <div class="status" id="status-message">Ready to generate</div>
+                    
+                    <div class="success-message" id="success-message">
+                        <i class="fas fa-check-circle"></i> Video generated successfully!
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Zamil Air Conditioners - Celebrating Saudi National Day 95</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const generateBtn = document.getElementById('generate-btn');
+            const progressBar = document.getElementById('progress-bar');
+            const statusMessage = document.getElementById('status-message');
+            const successMessage = document.getElementById('success-message');
+            
+            generateBtn.addEventListener('click', function() {
+                // Reset UI
+                progressBar.style.width = '0%';
+                statusMessage.textContent = 'Preparing assets...';
+                successMessage.style.display = 'none';
+                
+                // Simulate video generation progress
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 5;
+                    progressBar.style.width = progress + '%';
+                    
+                    if (progress === 5) {
+                        statusMessage.textContent = 'Rendering opening sequence...';
+                    } else if (progress === 20) {
+                        statusMessage.textContent = 'Adding team footage...';
+                    } else if (progress === 40) {
+                        statusMessage.textContent = 'Processing family scene...';
+                    } else if (progress === 60) {
+                        statusMessage.textContent = 'Creating calligraphy effect...';
+                    } else if (progress === 80) {
+                        statusMessage.textContent = 'Finalizing closing montage...';
+                    } else if (progress === 90) {
+                        statusMessage.textContent = 'Adding music and sound effects...';
+                    } else if (progress >= 100) {
+                        clearInterval(interval);
+                        statusMessage.textContent = 'Video rendering complete!';
+                        successMessage.style.display = 'block';
+                        
+                        // Simulate download button after a delay
+                        setTimeout(() => {
+                            generateBtn.innerHTML = '<i class="fas fa-download"></i> Download Video';
+                            generateBtn.onclick = function() {
+                                alert('Video download would start now in a real application.');
+                            };
+                        }, 1000);
+                    }
+                }, 200);
+            });
+        });
+    </script>
+</body>
+</html>
+```
+
+## How to Use This Code
+
+1. Copy the entire HTML code above
+2. Create a new file with a .html extension (e.g., `zamil-video-generator.html`)
+3. Paste the code into the file and save it
+4. Open the file in any modern web browser
+
+The page includes:
+- A visual storyboard preview of all 5 frames from your specification
+- Options to customize the video output
+- A generate button that simulates the video creation process
+- A progress bar and status messages
+- A success message when the "generation" is complete
+
+Note: This is a front-end simulation. In a real application, this would connect to a backend video generation service.
